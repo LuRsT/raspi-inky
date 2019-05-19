@@ -3,13 +3,12 @@
 import datetime
 
 from PIL import Image, ImageFont, ImageDraw
-from bs4 import BeautifulSoup
 from font_source_serif_pro import SourceSerifProSemibold
 from inky import InkyWHAT
-import requests
+from reuters import grab_ten_news
 
 
-def main():
+def paint():
     print("""Inky wHAT: News from Reuters""")
 
     # Config for display
@@ -47,26 +46,3 @@ def print_title(drawer, inky_display, font):
     now = datetime.datetime.now()
     title = "Updated at: {}".format(now.strftime("%Y-%m-%d %Hh"))
     drawer.text((10, 5), title, inky_display.RED, font=font)
-
-
-def print_something(drawer, inky_display, font, text):
-    drawer.text((10, 35), text, inky_display.RED, font=font)
-
-
-def grab_ten_news():
-    link = 'http://www.reuters.com/news/'
-    page = requests.get(link)
-
-    soup = BeautifulSoup(page.text, 'html.parser')
-
-    counter = 0
-    news = []
-    for new in soup.find_all("h3", class_="story-title"):
-        if new.string is not None and counter < 10:
-            counter += 1
-            news.append(new.string)
-    return news
-
-
-if __name__ == "__main__":
-    main()
